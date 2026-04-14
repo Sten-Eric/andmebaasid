@@ -25,8 +25,10 @@
 -   date, time, datetime - kuupäevad
 
 -   ## Piirangud
+-   ```
 -   Check
 -   Primary Key
 -   Foreign Key
 -   Not Null
 -   Unique
+    ```
