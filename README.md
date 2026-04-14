@@ -2,7 +2,9 @@
 
 ### Tunnis me kasutame andmebaasihaldussüsteemi:
 1. SQL Server Management Stuudio (SQL Serveri haldamiseks)
-2. XAMPP -phpmyAdmin (mariaDB andmebaas) -vabavara
+<img width="493" height="515" alt="{7B36BE88-298C-4B65-A8A1-20023CE6B080}" src="https://github.com/user-attachments/assets/393ba8f5-ccab-4dc8-b3ff-29595613472b" />
+
+3. XAMPP -phpmyAdmin (mariaDB andmebaas) -vabavara
 
 - Andmebaas - struktueeritud andmete kogum
 - Tabel - olem (entity)
