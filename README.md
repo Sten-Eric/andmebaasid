@@ -32,3 +32,8 @@
 -   Not Null
 -   Unique
   ```
+## Tabelivahelised Seosed
+- üks - ühele - (nt mees --naine)
+- üks - mitmele (nt õpilane käib erinevates õppeainetes)
+- <img width="541" height="268" alt="{09C9FFDE-7CC1-4449-8C15-8431908DBE7B}" src="https://github.com/user-attachments/assets/4ffcc7f4-137c-42c6-b885-310ab5878db0" />
+- mitu - mitmele (nt õpilane - õpetaja)
