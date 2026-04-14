@@ -21,3 +21,18 @@ DROP Database TARpv23; --kustutab databasei mida ma ise valin (võib anda errori
 --tabelirida kustutamine
 select * from opilane;
 DELETE FROM opilane WHERE opilaneId=4;
+
+CREATE TABLE opetamine(
+opetamineId int PRIMARY KEY IDENTITY(1, 1),
+opetajaId int FOREIGN KEY REFERENCES opetaja(opetajaId),
+oppeaine varchar(25),
+maht int
+)
+
+INSERT INTO opetamine(opetajaId, oppeaine, maht)
+VALUES (22, 'Andmebaasid', 100)
+
+DELETE FROM opetamine WHERE opetamineId=2;
+
+select * from opetamine;
+select * from opilane;
