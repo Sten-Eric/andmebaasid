@@ -1,15 +1,10 @@
 # Andmebaasid
 
-This is a repository for managing databases effectively.
+### tunnis me kasutame andmebaasihaldussüsteemi:
+1. SQL Server Management Stuudio (SQL Serveri haldamiseks)
+2. XAMPP -phpmyAdmin (mariaDB andmebaas) -vabavara
 
-## Overview
-This project aims to provide tools and examples for working with various database systems.
-
-## Installation
-Instructions will be provided soon.
-
-## Usage
-Provide usage instructions here.
-
-## Contributing
-To contribute, please fork the repository and submit a pull request.
+- Andmebaas - struktueeritud andmete kogum
+- Tabel - olem (entity)
+- Veerg - väli (Field)
+- Rida - kirja (record)
