@@ -1,1 +1,33 @@
+ALTER TABLE opilane ALTER COLUMN telefon varchar(13);
 
+sp_help opilane;
+drop table ryhm;
+
+CREATE TABLE ryhm(
+ryhmID int NOT NULL,
+ryhmNimi varchar(10));
+Select * from ryhm;
+
+ALTER TABLE ryhm ADD CONSTRAINT pk Primary key(ryhmID);
+
+--muudame tabeli ryhm ja teeme ryhmNimi unikaalseks UNIQUE
+ALTER TABLE ryhm AND CONSTRAINT un_ryhm UNIQUE(ryhmNimi);
+
+sp_help ryhm
+
+--täidame tabeli ryhm
+INSERT INTO ryhm(ryhmID, ryhmNimi)
+Values (1, 'LOGITpe24'), (2,'TITpe24');
+SELECT * FROM ryhm;
+
+
+ALTER TABLE opilane ADD ryhmID int;
+SELECT * FROM opilane;
+
+--lisame ryhmID foreign key
+ALTER TABLE opilane ADD CONSTRAINT fk_ryhm
+FOREIGN KEY (ryhmID) REFERENCES ryhm(ryhmID) --link tabel(PK veerg)
+
+--andmete lisamine tabelisse
+INSERT INTO opilane
+VALUES ('Kevin', 'Allik', '2003-10-23', 0, 'Tartu, Eesti', 4.5, 1 )
