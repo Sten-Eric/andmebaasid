@@ -1,1 +1,26 @@
+### Triger - Trigger -päästik
+## Triger - Andmebaasi objekt, mis käivitad automaatselt, kui toimub teatud sündmus (nt INSERT, UPDATE, DELETE)
+Trigerite loomine automaatseerub protsessid SQL serveris
+
+Tabelid is tuleb luua enne trigerit
+´´´sql
+create database trigerLogitpe24;
+
+use trigerLogitpe24;
+Create table linnad(
+linnId int primary key identity(1,1),
+linnanimi varchar(30) unique,
+maakond varchar(50),
+rahvaarv int);
+select * from linnad;
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Tallinn', 'Harjumaa', 600000);
+
+
+--tabel logi - tabel, mis täidab triger!!! kui kasutaja täidab tabeli linnad
+create table logi(
+id int primary key identity(1,1),
+kasutaja varchar(50),
+aeg DATETIME, 
+andmed TEXT);
 
