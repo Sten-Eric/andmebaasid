@@ -25,7 +25,7 @@ VALUES
 ('Mari', 'Sekretar', 1200),
 ('Jaan', 'IT', 2000);
 
-
+![Insert tabel](tabel.png)
 
 --3 triggerit
 --1. Insert trigger
