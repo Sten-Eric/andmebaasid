@@ -25,7 +25,7 @@ VALUES
 ('Mari', 'Sekretar', 1200),
 ('Jaan', 'IT', 2000);
 
-![Insert tabel](tabel.png)
+[Tabel ja Logi tulemused](tabel.png)
 
 --3 triggerit
 --1. Insert trigger
@@ -92,6 +92,8 @@ EXEC sp_helptext 'trg_delete';
 
 EXEC sp_helptext 'trg_koik';
 
+[EXEC sp_helptext triggerid](EXEC_triggerid.png)
+
 --Sekretari õigused
 CREATE LOGIN sekretarSten
 WITH PASSWORD = 'Andmebaasid143!4#PikEmParo0L';
@@ -102,3 +104,6 @@ FOR LOGIN sekretarSten;
 GRANT SELECT, INSERT, DELETE
 ON Tootajad
 TO sekretarSten;
+
+--sekretar ei näe logi
+[Sekretär permission denied](Sekretar_permissiondenied.png)
