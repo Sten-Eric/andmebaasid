@@ -410,6 +410,3 @@ SELECT * FROM toodete_kataloog WHERE bar_kood = '1234567890124'; -- Otsing bar-k
 | Alternate Key | Primaarvõti alternatiiv | Jah | Jah |
 
 ---
-
-**Loodud: 2024**
-**Aine: Andmebaasid**
