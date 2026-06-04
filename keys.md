@@ -382,7 +382,7 @@ CREATE TABLE toodete_kataloog (
 
 -- Andmete sisestamine
 INSERT INTO toodete_kataloog (toode_id, SKU, bar_kood, toote_nimi, kategooria, hind)
-VALUES (1, 'SKU-001', '1234567890123', 'Sülearvuti', 'Elektrooniqa', 899.99);
+VALUES (1, 'SKU-001', '1234567890123', 'Sülearvuti', 'Elektronika', 899.99);
 
 INSERT INTO toodete_kataloog (toode_id, SKU, bar_kood, toote_nimi, kategooria, hind)
 VALUES (2, 'SKU-002', '1234567890124', 'Hiir', 'Elektronika', 29.99);
@@ -410,3 +410,291 @@ SELECT * FROM toodete_kataloog WHERE bar_kood = '1234567890124'; -- Otsing bar-k
 | Alternate Key | Primaarvõti alternatiiv | Jah | Jah |
 
 ---
+
+## Triggerid (Triggers)
+
+### 💡 Trigerite loomine SQL Server / XAMPP
+
+SQL triggerid on spetsiaalsed andmebaasi objektid, mis käivituvad automaatselt, kui toimub teatud sündmus (nt INSERT, UPDATE või DELETE). Triggerite loomine aitab automatiseerida protsesse, tagada andmete terviklikkust ja rakendada äri loogikat otse andmebaasis.
+
+---
+
+### SQL Server - Triggerite näited
+
+#### Andmebaasi ja tabelite loomine
+
+```sql
+CREATE DATABASE trigerLogitpe24;
+USE trigerLogitpe24;
+
+CREATE TABLE linnad(
+    linnID INT PRIMARY KEY IDENTITY (1,1),
+    linnanimi VARCHAR(50) NOT NULL,
+    rahvaarv INT
+);
+
+CREATE TABLE logi(
+    id INT PRIMARY KEY IDENTITY (1,1),
+    kasutaja VARCHAR(100),
+    aeg DATETIME,
+    toiming VARCHAR(100),
+    andmed TEXT
+);
+```
+
+---
+
+#### INSERT Trigger - Lisatud kirjeid jälgimiseks
+
+Jälgib andmete sisestamist tabelis "linnad" ja teeb vastava kirje tabelis "logi".
+
+```sql
+CREATE TRIGGER linnaLisamine
+ON linnad
+FOR INSERT
+AS
+INSERT INTO logi(aeg, toiming, andmed)
+SELECT
+    GETDATE(),
+    'on tehtud INSERT käsk',
+    inserted.linnanimi
+FROM inserted;
+```
+
+**Trigeri tegevuse kontroll:**
+
+```sql
+INSERT INTO linnad(linnanimi, rahvaarv)
+VALUES ('Tallinn', 600000);
+
+SELECT * FROM linnad;
+SELECT * FROM logi;
+```
+
+---
+
+#### ALTER TRIGGER - Trigeri muutmine
+
+Leiame vajaliku tabeli andmebaasis → Avame Triggers kausta → Paremklõpsame soovitud triggeril → Valime Modify (Muuda).
+
+```sql
+USE [trigerLogitpe24]
+GO
+
+ALTER TRIGGER [dbo].[linnaLisamine]
+ON [dbo].[linnad]
+FOR INSERT
+AS
+INSERT INTO logi(aeg, toiming, andmed)
+SELECT
+    GETDATE(),
+    'on tehtud INSERT käsk',
+    CONCAT('linn: ', inserted.linnanimi, ', elanike arv: ', inserted.rahvaarv)
+FROM inserted;
+```
+
+**Tõsta esile ALTER TRIGGER → Execute → Käsk täidetud**
+
+---
+
+#### Kasutaja lisamine logi tabelisse
+
+Tools → Options → Designers → Table and Database Designers → Eemaldada linnuke valikust "Prevent saving changes that require table re-creation"
+
+Lisame välja "kasutaja" tabelisse ja salvestame:
+
+```sql
+ALTER TRIGGER [dbo].[linnaLisamine]
+ON [dbo].[linnad]
+FOR INSERT
+AS
+INSERT INTO logi(kasutaja, aeg, toiming, andmed)
+SELECT
+    SUSER_NAME(),
+    GETDATE(),
+    'on tehtud INSERT käsk',
+    CONCAT('linn: ', inserted.linnanimi, ', elanike arv: ', inserted.rahvaarv)
+FROM inserted;
+```
+
+**SUSER_NAME** on SQL funktsioon, mis tagastab hetkel sisse logitud kasutaja nime.
+
+---
+
+#### DELETE Trigger - Kustutatud kirjeid jälgimiseks
+
+```sql
+CREATE TRIGGER linnaKustutamine
+ON linnad
+FOR DELETE
+AS
+INSERT INTO logi(kasutaja, aeg, toiming, andmed)
+SELECT
+    SUSER_NAME(),
+    GETDATE(),
+    'on tehtud DELETE käsk',
+    CONCAT('linn: ', deleted.linnanimi, ', elanike arv: ', deleted.rahvaarv)
+FROM deleted;
+```
+
+**Kontrollimine:**
+
+```sql
+DELETE FROM linnad
+WHERE linnID=1;
+
+SELECT * FROM linnad;
+SELECT * FROM logi;
+```
+
+---
+
+#### UPDATE Trigger - Muudetud kirjeid jälgimiseks
+
+```sql
+CREATE TRIGGER linnaUuendamine
+ON linnad
+FOR UPDATE
+AS
+INSERT INTO logi(kasutaja, aeg, toiming, andmed)
+SELECT
+    SUSER_NAME(),
+    GETDATE(),
+    'on tehtud UPDATE käsk',
+    CONCAT('vanad andmed - linn: ', deleted.linnanimi,
+    ', elanike arv: ', deleted.rahvaarv,
+    ' | uued andmed - linn: ', inserted.linnanimi,
+    ', elanike arv: ', inserted.rahvaarv)
+FROM deleted
+INNER JOIN inserted
+ON deleted.linnID=inserted.linnID;
+```
+
+---
+
+#### Kombineerime INSERT ja DELETE triggerid
+
+See SQL trigger salvestab logi iga kord, kui linnade tabelis lisatakse uus linn või kustutatakse olemasolev linn. Trigger käivitub pärast INSERT või DELETE toimingut ja salvestab logisse andmed.
+
+```sql
+--INSERT, DELETE Trigger
+CREATE TRIGGER linnaLisamineJaKustutamine
+ON linnad
+FOR INSERT, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO logi(kuupaev, andmed, kasutaja)
+    SELECT
+        getdate(),
+        CONCAT('lisatud linn: ', inserted.linnanimi,
+        ' | rahvaarv: ', inserted.rahvaarv, ' | id: ', inserted.linnID),
+        SYSTEM_USER
+    FROM inserted
+    
+    UNION ALL
+    
+    SELECT
+        getdate(),
+        CONCAT('kustutatud linn: ', deleted.linnanimi,
+        ' | rahvaarv: ', deleted.rahvaarv, ' | id: ', deleted.linnID),
+        SYSTEM_USER
+    FROM deleted;
+END;
+
+--Deaktiveerime linnaLisamine ja linnaKustutamine
+DISABLE TRIGGER linnaLisamine ON linnad;
+DISABLE TRIGGER linnaKustutamine ON linnad;
+```
+
+---
+
+### XAMPP/MariaDB - Triggerite näited
+
+#### Andmebaasi ja tabelite loomine
+
+```sql
+CREATE DATABASE IF NOT EXISTS trigerLogitpe24;
+USE trigerLogitpe24;
+
+CREATE TABLE linnad(
+    linnID INT PRIMARY KEY AUTO_INCREMENT,
+    linnanimi VARCHAR(50) NOT NULL,
+    rahvaarv INT
+);
+
+CREATE TABLE logi(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    kuupaev TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    andmed TEXT,
+    kasutaja VARCHAR(100),
+    toiming VARCHAR(50)
+);
+```
+
+#### INSERT Trigger - XAMPP/MariaDB
+
+```sql
+CREATE TRIGGER linnaLisamine
+AFTER INSERT ON linnad
+FOR EACH ROW
+INSERT INTO logi(andmed, kasutaja, toiming)
+VALUES (
+    CONCAT('lisatud linn: ', NEW.linnanimi, ', rahvaarv: ', NEW.rahvaarv, ' | id: ', NEW.linnID),
+    USER(),
+    'INSERT'
+);
+```
+
+#### DELETE Trigger - XAMPP/MariaDB
+
+```sql
+CREATE TRIGGER linnaKustutamine
+BEFORE DELETE ON linnad
+FOR EACH ROW
+INSERT INTO logi(andmed, kasutaja, toiming)
+VALUES (
+    CONCAT('kustutatud linn: ', OLD.linnanimi, ', rahvaarv: ', OLD.rahvaarv, ' | id: ', OLD.linnID),
+    USER(),
+    'DELETE'
+);
+```
+
+#### UPDATE Trigger - XAMPP/MariaDB
+
+```sql
+CREATE TRIGGER linnaUuendamine
+AFTER UPDATE ON linnad
+FOR EACH ROW
+INSERT INTO logi(andmed, kasutaja, toiming)
+VALUES (
+    CONCAT('vana linn: ', OLD.linnanimi, ', rahvaarv: ', OLD.rahvaarv,
+    ' | uus linn: ', NEW.linnanimi, ', rahvaarv: ', NEW.rahvaarv, ' | id: ', NEW.linnID),
+    USER(),
+    'UPDATE'
+);
+```
+
+---
+
+## Andmebaaside põhimõisted - Kiirkokkuvõte
+
+**Andmebaasistruktuur:**
+- Andmebaas - Andmebaasihaldussüsteem (DBMS) - Tabel - Veerg (atribuut) - Rida (kirje)
+
+**Võtmed ja piirangud:**
+- Primaarvõti (Primary Key) - Võõrvõti (Foreign Key) - Indeks - Piirangud (Constraints)
+
+**Päringud ja operatsioonid:**
+- Päring (SELECT) - Tingimus (WHERE) - Sorteerimine (ORDER BY) - Grupeerimine (GROUP BY) - Liitmine (JOIN)
+
+**Andmebaasi objektid:**
+- Vaade (VIEW) - Protseduur (Stored Procedure) - Trigger - Skeem
+
+**Andmetüübid:**
+- INT, SMALLINT, DECIMAL, FLOAT - CHAR, VARCHAR, TEXT - DATE, TIME, DATETIME - BOOLEAN
+
+**Muud mõisted:**
+- NULL väärtus - Relatsioon - Kasutaja ja õigused (GRANT, REVOKE)
+
