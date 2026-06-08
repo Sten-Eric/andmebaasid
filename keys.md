@@ -1,5 +1,7 @@
 # Andmebaasi võtmed (Keys)
 
+[Põhimõisted](README.md) | [Küsimused](kysimused.md) | [Võtmed](keys.md) | [Triggerid](trigerid.md) | [Triggerite ülesanne](TRIGERIDÜLESANNNEEE.md)
+
 Andmebaasi võtmed on väga olulised andmete korrektuse ja terviklikkuse tagamiseks. Selles dokumendis tutvustame erinevat tüüpi võtmeid ja nende praktilist kasutamist.
 
 ---
