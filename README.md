@@ -1,6 +1,6 @@
 # Andmebaasihaldussüsteemid
 
-[Põhimõisted](README.md) | [Põhimõisted](kysimused.md) | [Põhimõisted](keys.md) | [Põhimõisted](trigerid.md) | [Põhimõisted](TRIGERIDÜLESANNNEEE.md) 
+[Põhimõisted](README.md) | [Põhimõisted](kysimused.md) | [Põhimõisted](keys.md) | [Põhimõisted](trigerid.md) | (TRIGERIDÜLESANNNEEE.md)[Põhimõisted] 
 
 ### Tunnis me kasutame andmebaasihaldussüsteemi:
 
