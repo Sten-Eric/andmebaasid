@@ -1,5 +1,7 @@
 # Andmebaasihaldussüsteemid
 
+[Põhimõisted](README.md) | [Põhimõisted](kysimused.md) | [Põhimõisted](keys.md) | [Põhimõisted](trigerid.md) | [Põhimõisted](TRIGERIDÜLESANNNEEE.md) 
+
 ### Tunnis me kasutame andmebaasihaldussüsteemi:
 
 - SQL - structured Query Language - struktureeritud päringukeel
