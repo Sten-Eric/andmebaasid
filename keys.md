@@ -26,21 +26,25 @@ Primaarvõti on väli või väljadele kombinatsioon, mis uniikselt identifitseer
 ```sql
 -- Tabeli loomine primaarvõtmega
 CREATE TABLE oppilased (
-    oppilase_id INT PRIMARY KEY AUTO_INCREMENT,
-    eesnimi VARCHAR(50) NOT NULL,
-    perekonnanimi VARCHAR(50) NOT NULL,
+    oppilase_id INT PRIMARY KEY,
+    eesnimi VARCHAR(50),
+    perekonnanimi VARCHAR(50),
     e_post VARCHAR(100) UNIQUE
 );
 
 -- Andmete sisestamine
-INSERT INTO oppilased (eesnimi, perekonnanimi, e_post)
-VALUES ('Jaan', 'Jõgi', 'jaan.jogi@email.com');
-INSERT INTO oppilased (eesnimi, perekonnanimi, e_post)
-VALUES ('Liisa', 'Lehis', 'liisa.lehis@email.com');
+
+INSERT INTO oppilased (oppilase_id, eesnimi, perekonnanimi, e_post)
+VALUES (1, 'Jaan', 'Jõgi', 'jaan.jogi@email.com');
+
+INSERT INTO oppilased (oppilase_id, eesnimi, perekonnanimi, e_post)
+VALUES (2, 'Liisa', 'Lehis', 'liisa.lehis@email.com');
 
 -- Andmete pärimine
 SELECT * FROM oppilased;
 ```
+<img width="639" height="548" alt="{2790F035-9CEC-4AEB-BE7A-25345716C116}" src="https://github.com/user-attachments/assets/443c0ce3-313c-4aeb-a1bf-d8d3e40569d8" />
+
 
 ---
 
@@ -62,43 +66,51 @@ Võõrvõti on väli tabelis, mis viitab teise tabeli primaarvõtmele. Luuakse s
 ### Praktilised näited
 
 ```sql
--- Kursuste tabel
 CREATE TABLE kursused (
-    kursuse_id INT PRIMARY KEY AUTO_INCREMENT,
-    kursuse_nimi VARCHAR(100) NOT NULL,
+    kursuse_id INT PRIMARY KEY,
+    kursuse_nimi VARCHAR(100),
     kirjeldus TEXT
 );
 
 -- Registreerimised - võõrvõtmega
 CREATE TABLE registreerimised (
-    registreeringu_id INT PRIMARY KEY AUTO_INCREMENT,
-    oppilase_id INT NOT NULL,
-    kursuse_id INT NOT NULL,
+    registreeringu_id INT PRIMARY KEY,
+    oppilase_id INT,
+    kursuse_id INT,
     registreeringu_kuupaev DATE,
     FOREIGN KEY (oppilase_id) REFERENCES oppilased(oppilase_id),
     FOREIGN KEY (kursuse_id) REFERENCES kursused(kursuse_id)
 );
 
 -- Kursuste lisamine
-INSERT INTO kursused (kursuse_nimi, kirjeldus)
-VALUES ('Andmebaasid', 'SQL ja andmebaasi disain');
+INSERT INTO kursused (kursuse_id, kursuse_nimi, kirjeldus)
+VALUES (1, 'Andmebaasid', 'SQL ja andmebaasi disain');
 
-INSERT INTO kursused (kursuse_nimi, kirjeldus)
-VALUES ('Programmeerimine', 'Python ja Java');
+INSERT INTO kursused (kursuse_id, kursuse_nimi, kirjeldus)
+VALUES (2, 'Programmeerimine', 'Python ja Java');
 
 -- Registreerimiste lisamine
-INSERT INTO registreerimised (oppilase_id, kursuse_id, registreeringu_kuupaev)
-VALUES (1, 1, '2024-01-15');
+INSERT INTO registreerimised (registreeringu_id, oppilase_id, kursuse_id, registreeringu_kuupaev)
+VALUES (1, 1, 1, '2024-01-15');
 
-INSERT INTO registreerimised (oppilase_id, kursuse_id, registreeringu_kuupaev)
-VALUES (2, 2, '2024-01-16');
+INSERT INTO registreerimised (registreeringu_id, oppilase_id, kursuse_id, registreeringu_kuupaev)
+VALUES (2, 2, 2, '2024-01-16');
 
 -- Liitpäring - võõrvõtmete kasutamine
-SELECT oppilased.eesnimi, oppilased.perekonnanimi, kursused.kursuse_nimi
+SELECT
+    oppilased.eesnimi,
+    oppilased.perekonnanimi,
+    kursused.kursuse_nimi
 FROM registreerimised
-JOIN oppilased ON registreerimised.oppilase_id = oppilased.oppilase_id
-JOIN kursused ON registreerimised.kursuse_id = kursused.kursuse_id;
+JOIN oppilased
+ON registreerimised.oppilase_id = oppilased.oppilase_id
+JOIN kursused
+ON registreerimised.kursuse_id = kursused.kursuse_id;
 ```
+<img width="486" height="214" alt="{D4CEB970-D93A-4137-A105-BB1BC7C85DFC}" src="https://github.com/user-attachments/assets/729d7c85-579e-4d91-863e-d597e3b66daa" />
+<img width="433" height="350" alt="{72933EDB-E36D-45FB-A13E-79A833BCA1E3}" src="https://github.com/user-attachments/assets/43d42dc3-c529-4d66-8e2b-702ec270cdc1" />
+
+
 
 ---
 
@@ -122,26 +134,24 @@ Unikaalne võti tagab, et väli või väljadele kombinatsioon sisaldab ainult ko
 ```sql
 -- Tabel UNIQUE võtmega
 CREATE TABLE kasutajad (
-    kasutaja_id INT PRIMARY KEY AUTO_INCREMENT,
-    kasutajanimi VARCHAR(50) NOT NULL UNIQUE,
-    e_post VARCHAR(100) NOT NULL UNIQUE,
-    parool VARCHAR(255) NOT NULL
+    kasutaja_id INT PRIMARY KEY,
+    kasutajanimi VARCHAR(50),
+    e_post VARCHAR(100),
+    parool VARCHAR(255)
 );
 
 -- Andmete sisestamine
-INSERT INTO kasutajad (kasutajanimi, e_post, parool)
-VALUES ('jaan123', 'jaan@mail.ee', 'salasõna123');
+INSERT INTO kasutajad (kasutaja_id, kasutajanimi, e_post, parool)
+VALUES (1, 'jaan123', 'jaan@mail.ee', 'salasõna123');
 
-INSERT INTO kasutajad (kasutajanimi, e_post, parool)
-VALUES ('liisa456', 'liisa@mail.ee', 'salasõna456');
-
--- See kutsub välja vea - korduv kasutajanimi
--- INSERT INTO kasutajad (kasutajanimi, e_post, parool)
--- VALUES ('jaan123', 'jaan2@mail.ee', 'salasõna789');
+INSERT INTO kasutajad (kasutaja_id, kasutajanimi, e_post, parool)
+VALUES (2, 'liisa456', 'liisa@mail.ee', 'salasõna456');
 
 -- Andmete pärimine
 SELECT * FROM kasutajad;
 ```
+<img width="419" height="220" alt="{7DA316E0-62BB-41E3-944A-2BF1F3C98B39}" src="https://github.com/user-attachments/assets/0e288583-77f9-4d18-90f0-742169e7b3d2" />
+
 
 ---
 
