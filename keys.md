@@ -636,8 +636,8 @@ create table logi(
 select * from linnad;
 select * from logi;
 
-![Pilt 1](pildid/pilt1.png)
 ```
+![Pilt 1](pildid/pilt1.png)
 
 #### INSERT Trigger - XAMPP/MariaDB
 
@@ -685,9 +685,8 @@ delete from linnad where linnId = 2;
 select * from linnad;
 select * from logi;
 
-![Pilt 2](pildid/pilt2.png)
 ```
-
+![Pilt 2](pildid/pilt2.png)
 #### UPDATE Trigger - XAMPP/MariaDB
 
 ```sql
@@ -710,9 +709,8 @@ where linnId = 1;
 select * from linnad;
 select * from logi;
 
-![Pilt 3](pildid/pilt3.png)
 ```
-
+![Pilt 3](pildid/pilt3.png)
 ```sql
 #### linnaLisamineKustutamine
 create trigger linnaLisamineKustutamine
@@ -740,8 +738,8 @@ delete from linnad where linnId = 3;
 insert into linnad(linnanimi, maakond, rahvaarv)
 values ('Viljandi', 'Viljandimaa', 4000);
 select * from logi;
-![Pilt 4](pildid/pilt4.png)
 ```
+![Pilt 4](pildid/pilt4.png)
 
 ---sql
 ## Triggerite keelamine
@@ -761,8 +759,9 @@ CREATE USER sekretarSten FOR LOGIN sekretarSten;
 
 grant select, insert, delete on linnad to sekretarSten;
 deny select on logi to sekretarSten;
-![Pilt 5](pildid/pilt5.png)
 ![Pilt 6](pildid/pilt6.png)
+![Pilt 5](pildid/pilt5.png)
+
 
 ```
 ----
