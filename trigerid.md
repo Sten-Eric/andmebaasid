@@ -27,6 +27,8 @@ id int primary key identity(1,1),
 kasutaja varchar(50),
 aeg DATETIME, 
 andmed TEXT);
+```
+
 
 ```sql
 create trigger linnaLisamine
@@ -134,6 +136,7 @@ values ('Viljandi', 'Viljandimaa', '4000');
 select * from 
 -- õigustega linnalisamine, kustutamine, uuendamine,
 -- ja ei näe tabeli logi ning ei saa trigerid muuta
+```
 
 --security--new login
 
