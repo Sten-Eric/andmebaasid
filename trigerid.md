@@ -1,8 +1,8 @@
 ### Triger - Trigger -päästik
-## Triger - Andmebaasi objekt, mis käivitad automaatselt, kui toimub teatud sündmus (nt INSERT, UPDATE, DELETE)
+
 [Põhimõisted](README.md) | [Küsimused](kysimused.md) | [Võtmed](keys.md) | [Triggerid](trigerid.md) | [Triggerite ülesanne](TRIGERIDÜLESANNNEEE.md)
 
-
+## Triger - Andmebaasi objekt, mis käivitad automaatselt, kui toimub teatud sündmus (nt INSERT, UPDATE, DELETE)
 
 Trigerite loomine automaatseerub protsessid SQL serveris
 
