@@ -617,68 +617,151 @@ DISABLE TRIGGER linnaKustutamine ON linnad;
 #### Andmebaasi ja tabelite loomine
 
 ```sql
-CREATE DATABASE IF NOT EXISTS trigerLogitpe24;
-USE trigerLogitpe24;
+create database trigerLogitpe24;
+use trigerLogitpe24;
 
-CREATE TABLE linnad(
-    linnID INT PRIMARY KEY AUTO_INCREMENT,
-    linnanimi VARCHAR(50) NOT NULL,
-    rahvaarv INT
+create table linnad(
+    linnId int primary key identity(1,1),
+    linnanimi varchar(30) unique,
+    maakond varchar(50),
+    rahvaarv int
 );
 
-CREATE TABLE logi(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    kuupaev TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    andmed TEXT,
-    kasutaja VARCHAR(100),
-    toiming VARCHAR(50)
+create table logi(
+    id int primary key identity(1,1),
+    kasutaja varchar(50),
+    aeg DATETIME,
+    andmed TEXT
 );
+select * from linnad;
+select * from logi;
+
+![Pilt 1](images/pilt1.png)
 ```
 
 #### INSERT Trigger - XAMPP/MariaDB
 
 ```sql
-CREATE TRIGGER linnaLisamine
-AFTER INSERT ON linnad
-FOR EACH ROW
-INSERT INTO logi(andmed, kasutaja, toiming)
-VALUES (
-    CONCAT('lisatud linn: ', NEW.linnanimi, ', rahvaarv: ', NEW.rahvaarv, ' | id: ', NEW.linnID),
-    USER(),
-    'INSERT'
-);
+create trigger linnaLisamine
+on linnad
+for insert
+as
+insert into logi(kasutaja, aeg, andmed)
+select
+    SYSTEM_USER,
+    GETDATE(),
+    CONCAT('lisatud: ', inserted.linnanimi, ', ', inserted.maakond, ', ', inserted.rahvaarv)
+from inserted;
+
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Tallinn', 'Harjumaa', 600000);
+
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Tartu', 'Tartumaa', 20000);
+
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Viljandi', 'Viljandimaa', 5000);
+
+select * from linnad;
+select * from logi;
 ```
 
 #### DELETE Trigger - XAMPP/MariaDB
 
 ```sql
-CREATE TRIGGER linnaKustutamine
-BEFORE DELETE ON linnad
-FOR EACH ROW
-INSERT INTO logi(andmed, kasutaja, toiming)
-VALUES (
-    CONCAT('kustutatud linn: ', OLD.linnanimi, ', rahvaarv: ', OLD.rahvaarv, ' | id: ', OLD.linnID),
-    USER(),
-    'DELETE'
-);
+create trigger linnaKustutamine
+on linnad
+for delete
+as
+insert into logi(kasutaja, aeg, andmed)
+select
+    SYSTEM_USER,
+    GETDATE(),
+    CONCAT('kustutatud: ', deleted.linnanimi, ', ', deleted.maakond, ', ', deleted.rahvaarv)
+from deleted;
+
+delete from linnad where linnId = 2;
+
+select * from linnad;
+select * from logi;
+
+![Pilt 3](images/pilt3.png)
 ```
 
 #### UPDATE Trigger - XAMPP/MariaDB
 
 ```sql
-CREATE TRIGGER linnaUuendamine
-AFTER UPDATE ON linnad
-FOR EACH ROW
-INSERT INTO logi(andmed, kasutaja, toiming)
-VALUES (
-    CONCAT('vana linn: ', OLD.linnanimi, ', rahvaarv: ', OLD.rahvaarv,
-    ' | uus linn: ', NEW.linnanimi, ', rahvaarv: ', NEW.rahvaarv, ' | id: ', NEW.linnID),
-    USER(),
-    'UPDATE'
-);
+create trigger linnaUuendamine
+on linnad
+for update
+as
+insert into logi(kasutaja, aeg, andmed)
+select
+    SYSTEM_USER,
+    GETDATE(),
+    CONCAT('vanad andmed: ', deleted.linnanimi, ', ', deleted.maakond, ', ', deleted.rahvaarv,
+           ' | uued andmed: ', inserted.linnanimi, ', ', inserted.maakond, ', ', inserted.rahvaarv)
+from deleted inner join inserted
+on deleted.linnId = inserted.linnId;
+
+update linnad set linnanimi = 'Tallinn22', rahvaarv = 700000
+where linnId = 1;
+
+select * from linnad;
+select * from logi;
+
+![Pilt 4](images/pilt4.png)
 ```
+#### linnaLisamineKustutamine
+create trigger linnaLisamineKustutamine
+on linnad
+for insert, delete
+as
+begin
+    set nocount on;
+    insert into logi(kasutaja, aeg, andmed)
+    select
+        SYSTEM_USER,
+        GETDATE(),
+        CONCAT('lisatud: ', inserted.linnanimi, ', ', inserted.maakond, ', ', inserted.rahvaarv)
+    from inserted
+    union all
+    select
+        SYSTEM_USER,
+        GETDATE(),
+        CONCAT('kustutatud: ', deleted.linnanimi, ', ', deleted.maakond, ', ', deleted.rahvaarv)
+    from deleted;
+end;
+
+delete from linnad where linnId = 3;
+
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Viljandi', 'Viljandimaa', 4000);
+select * from logi;
+![Pilt 5](images/pilt5.png)
 
 ---
+## Triggerite keelamine
+disable trigger linnaLisamine on linnad;
+disable trigger linnaKustutamine on linnad;
+enable trigger linnaUuendamine on linnad;
+
+-- test: lisamine ei lähe logi (linnaLisamine on disabled)
+insert into linnad(linnanimi, maakond, rahvaarv)
+values ('Narxva', 'Narvaaa', 25000);
+
+select * from logi;
+
+-- õigused
+CREATE LOGIN sekretarSten WITH PASSWORD = 'Parool12423r4fd<gfdg3!';
+CREATE USER sekretarSten FOR LOGIN sekretarSten;
+
+grant select, insert, delete on linnad to sekretarSten;
+deny select on logi to sekretarSten;
+![Pilt 5](images/pilt5.png)
+![Pilt 6](images/pilt6.png)
+
+----
 
 ## Andmebaaside põhimõisted - Kiirkokkuvõte
 
