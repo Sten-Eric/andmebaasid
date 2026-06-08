@@ -1,5 +1,7 @@
 # Triggerid ülesanne
 
+[Põhimõisted](README.md) | [Küsimused](kysimused.md) | [Võtmed](keys.md) | [Triggerid](trigerid.md) | [Triggerite ülesanne](TRIGERIDÜLESANNNEEE.md)
+
 ## Tabelite loomine
 
 ```sql
