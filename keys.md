@@ -712,6 +712,8 @@ select * from logi;
 
 ![Pilt 3](pildid/pilt3.png)
 ```
+
+```sql
 #### linnaLisamineKustutamine
 create trigger linnaLisamineKustutamine
 on linnad
@@ -739,8 +741,9 @@ insert into linnad(linnanimi, maakond, rahvaarv)
 values ('Viljandi', 'Viljandimaa', 4000);
 select * from logi;
 ![Pilt 4](pildid/pilt4.png)
+```
 
----
+---sql
 ## Triggerite keelamine
 disable trigger linnaLisamine on linnad;
 disable trigger linnaKustutamine on linnad;
@@ -761,6 +764,7 @@ deny select on logi to sekretarSten;
 ![Pilt 5](pildid/pilt5.png)
 ![Pilt 6](pildid/pilt6.png)
 
+```
 ----
 
 ## Andmebaaside põhimõisted - Kiirkokkuvõte
