@@ -612,7 +612,7 @@ DISABLE TRIGGER linnaKustutamine ON linnad;
 
 ---
 
-### XAMPP/MariaDB - Triggerite näited
+## Triggerite näited
 
 #### Andmebaasi ja tabelite loomine
 
@@ -637,9 +637,11 @@ select * from linnad;
 select * from logi;
 
 ```
-![Pilt 1](pildid/pilt1.png)
+<img width="503" height="769" alt="pilt1" src="https://github.com/user-attachments/assets/82143f7f-26c4-4fc3-84af-a20adbaabaf8" />
 
-#### INSERT Trigger - XAMPP/MariaDB
+
+
+#### INSERT Trigger 
 
 ```sql
 create trigger linnaLisamine
@@ -665,6 +667,8 @@ values ('Viljandi', 'Viljandimaa', 5000);
 select * from linnad;
 select * from logi;
 ```
+<img width="774" height="735" alt="pilt2" src="https://github.com/user-attachments/assets/3769732c-4b8e-4d5a-a48e-0b8b859e83ae" />
+
 
 #### DELETE Trigger - XAMPP/MariaDB
 
@@ -686,7 +690,8 @@ select * from linnad;
 select * from logi;
 
 ```
-![Pilt 2](pildid/pilt2.png)
+<img width="767" height="674" alt="pilt3" src="https://github.com/user-attachments/assets/13e5d18f-12d2-4623-8514-f2cfecbc4b62" />
+
 #### UPDATE Trigger - XAMPP/MariaDB
 
 ```sql
@@ -710,7 +715,8 @@ select * from linnad;
 select * from logi;
 
 ```
-![Pilt 3](pildid/pilt3.png)
+<img width="884" height="742" alt="pilt4" src="https://github.com/user-attachments/assets/d7c8c868-84d0-4d67-a570-c152ba9c9769" />
+
 ```sql
 #### linnaLisamineKustutamine
 create trigger linnaLisamineKustutamine
@@ -739,7 +745,8 @@ insert into linnad(linnanimi, maakond, rahvaarv)
 values ('Viljandi', 'Viljandimaa', 4000);
 select * from logi;
 ```
-![Pilt 4](pildid/pilt4.png)
+<img width="812" height="742" alt="pilt5" src="https://github.com/user-attachments/assets/cba625da-adc4-4f2e-9d18-ab8e7898ef85" />
+
 
 ---sql
 ## Triggerite keelamine
@@ -759,8 +766,11 @@ CREATE USER sekretarSten FOR LOGIN sekretarSten;
 
 grant select, insert, delete on linnad to sekretarSten;
 deny select on logi to sekretarSten;
-![Pilt 6](pildid/pilt6.png)
-![Pilt 5](pildid/pilt5.png)
+<img width="1717" height="876" alt="Nimetu" src="https://github.com/user-attachments/assets/7696d2c2-d670-4ac1-abc9-d52d775c167a" />
+<img width="715" height="573" alt="{177DDED4-BA7E-49CA-9828-AD94A1E93990}" src="https://github.com/user-attachments/assets/908c6791-da04-4590-b9a7-1f398b103534" />
+
+
+
 
 
 ```
